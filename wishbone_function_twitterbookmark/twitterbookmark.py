@@ -73,7 +73,7 @@ class TwitterBookmark(Actor):
         self.tknzr = TweetTokenizer()
 
     def preHook(self):
-        download(info_or_id="stopwords", quiet=True, download_dir="/tmp")
+        download(info_or_id="stopwords", quiet=True)
 
     def consume(self, event):
 
