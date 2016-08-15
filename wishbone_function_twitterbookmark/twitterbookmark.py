@@ -37,15 +37,31 @@ class TwitterBookmark(Actor):
     The module takes a Twitter favorite event and extracts the URLs, tags and
     keywords.
 
-    Bookmark event:
+    This module distinguishes between 2 types of favorites:
 
-    @tmp.<name>.type            Can be either "text" or "bookmark"
-    @tmp.<name>.url             The extracted URL. (1 event per URL)
-    @tmp.<name>.summary         An array of the meaningfull words of the tweet.
-                                uninteresting words.
-    @tmp.<name>.tags            An array of tags
-    @tmp.<name>.screen_name     The name of the tweet author.
-    @tmp.<name>.created_at      The timestamp of the tweet.
+
+    With URL (type bookmark)
+
+        Bookmark event:
+
+        @tmp.<name>.type            Has value "bookmark"
+        @tmp.<name>.url             The extracted URL. (1 event per URL)
+        @tmp.<name>.summary         An array of meaningfull words.
+        @tmp.<name>.tags            An array of hashtags
+        @tmp.<name>.screen_name     The name of the author.
+        @tmp.<name>.created_at      The timestamp of the tweet.
+
+    Without URL (type text)
+
+        @tmp.<name>.type            Has value "text"
+        @tmp.<name>.text            The complete tweet.
+        @tmp.<name>.tags            An array of tags
+        @tmp.<name>.screen_name     The name of the tweet author.
+        @tmp.<name>.created_at      The timestamp of the tweet.
+
+
+    Events of type bookmark containing multiple urls will result into multiple
+    events.
 
 
     Parameters:
@@ -98,6 +114,7 @@ class TwitterBookmark(Actor):
                 e = event.clone()
                 e.set("text", "@tmp.%s.type" % (self.name))
                 e.copy("@data.target_object.text", "@tmp.%s.text" % (self.name))
+                e.set(tags, "@tmp.%s.tags" % (self.name))
                 e.copy("@data.target.screen_name", "@tmp.%s.user" % (self.name))
                 e.copy("@data.target.created_at", "@tmp.%s.date" % (self.name))
                 self.submit(e, self.pool.queue.outbox)
