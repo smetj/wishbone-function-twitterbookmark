@@ -26,7 +26,7 @@ from setuptools import setup, find_packages
 from setuptools.command.test import test as TestCommand
 import sys
 
-PROJECT = 'wishbone_function_bookmark'
+PROJECT = 'wishbone_function_twitterbookmark'
 VERSION = '1.0.0'
 
 install_requires = [

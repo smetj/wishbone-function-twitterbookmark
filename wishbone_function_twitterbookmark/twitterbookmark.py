@@ -94,12 +94,12 @@ class TwitterBookmark(Actor):
     def consume(self, event):
 
         urls = event.get("@data.target_object.entities.urls")
+        tags = [tag["text"].lower() for tag in event.get("@data.target_object.entities.hashtags")]
 
         if len(urls) > 0:
             text = event.get("@data.target_object.text")
             tokenized_text = self.tknzr.tokenize(text)
             summary = self.cleanup(tokenized_text)
-            tags = [tag["text"].lower() for tag in event.get("@data.target_object.entities.hashtags")]
 
             for url in urls:
                 e = event.clone()
